@@ -1,0 +1,197 @@
+@import "../../styles/breakpoints.scss";
+@import "../../styles/shadows.scss";
+
+.airdrop-container {
+  display: block;
+  position: relative;
+  z-index: 10;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  & .airdrop-title {
+    display: block;
+    position: relative;
+    & .title-text {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 500;
+      color: white;
+      letter-spacing: 1px;
+      @include lg {
+        font-size: 32px;
+        margin: 50px 0 25px 0;
+      }
+    }
+    & .connect-container {
+      @include lg {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+      & .connect-button {
+        display: block;
+        width: 165px;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 600;
+        margin: 40px auto 8px auto;
+        color: #3934a1;
+        border: none;
+        border-radius: 0.25rem;
+        padding: 10px 8px;
+        box-shadow: $shadow-soft-light;
+        cursor: pointer;
+        &:hover {
+          color: #999999;
+        }
+      }
+      & .disconnect-button {
+        display: block;
+        width: 165px;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 600;
+        margin: 0 auto;
+        color: red;
+        border: none;
+        border-radius: 0.25rem;
+        padding: 10px 8px;
+        cursor: pointer;
+        &:hover {
+          color: #999999;
+        }
+      }
+    }
+  }
+  & .airdrop-subtitle {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: 1px;
+    margin: 10px 0;
+    & span {
+      font-weight: 300;
+      opacity: 0.75;
+    }
+  }
+
+  & .airdrop-details {
+    display: block;
+    margin: 45px auto;
+    text-align: center;
+    position: relative;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    @include sm {
+      max-width: 450px;
+      margin-top: 75px;
+    }
+    @include md {
+      margin-top: 100px;
+    }
+    @include lg {
+      max-width: 750px;
+    }
+    & .upper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px;
+      background-color: #354e8e;
+      @include lg {
+        padding: 44px 66px;
+      }
+      & .details-item {
+        & .title {
+          font-size: 13px;
+          color: white;
+          margin-bottom: 8px;
+          opacity: 0.75;
+          @include lg {
+            font-size: 16px;
+          }
+        }
+        & .value {
+          font-size: 16px;
+          color: white;
+          letter-spacing: 1px;
+          @include lg {
+            font-size: 28px;
+          }
+        }
+      }
+    }
+    & .lower {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 25px 0;
+      background-color: #4a8cc9;
+      @include lg {
+        padding: 50px 0;
+      }
+      & .claim-item {
+        display: block;
+        width: 100%;
+        & .title {
+          font-size: 20px;
+          color: white;
+          margin-bottom: 8px;
+          opacity: 0.75;
+          letter-spacing: 1px;
+          @include lg {
+            font-size: 28px;
+          }
+        }
+        & .value {
+          font-size: 28px;
+          font-weight: 500;
+          color: #9afa9a;
+          letter-spacing: 1px;
+          @include lg {
+            font-size: 36px;
+          }
+        }
+      }
+      & .claim-btn {
+        display: block;
+        padding: 12px 20px;
+        border: none;
+        background-color: white;
+        border: solid 1px lightgray;
+        border-radius: 0.5rem;
+        box-shadow: $shadow-tiny;
+        color: #354e8e;
+        font-size: 14px;
+        font-weight: 600;
+        margin: 25px auto 0 auto;
+        @include lg {
+          padding: 12px 32px;
+        }
+        cursor: pointer;
+        &:hover {
+          color: #999999;
+        }
+      }
+      & .claim-disconnected {
+        display: block;
+        text-align: center;
+        margin: 0 auto;
+        font-size: 14px;
+        font-weight: 300;
+        color: white;
+        & span {
+          display: block;
+          font-size: 18px;
+          font-weight: 400;
+          margin-bottom: 0px;
+        }
+      }
+    }
+  }
+}
