@@ -7,6 +7,7 @@ import OnPageChange from "../utilities/hocs/OnPageChange";
 
 // HEADER & FOOTER
 import Header from "../components/header/Header";
+import Footer from "../components/footer/Footer";
 
 // LAZY IMPORT
 const Swap = lazy(() => import("../components/swap"));
@@ -27,6 +28,7 @@ export default class Routes extends Component {
                 }}
               />
             </Switch>
+            <Footer />
           </OnPageChange>
         </Suspense>
       </BrowserRouter>
