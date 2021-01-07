@@ -1,5 +1,5 @@
 import React, { Component, Suspense, lazy } from "react";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Loader from "./loader";
 
 // ROUTES
@@ -21,10 +21,11 @@ export default class Routes extends Component {
             <Switch>
               <Route exact path={"/"} component={Swap} />
               <Route
-                path={"/404"}
-                render={() => window.location.replace("https://governordao.org")}
+                component={() => {
+                  window.location.href = "https://governordao.org";
+                  return null;
+                }}
               />
-              <Redirect to={"/404"} />
             </Switch>
           </OnPageChange>
         </Suspense>

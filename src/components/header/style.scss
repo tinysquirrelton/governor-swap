@@ -115,7 +115,7 @@
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      & a {
+      & a, & .menu-item {
         color: white;
         margin-right: 5vw;
         text-decoration: none;
@@ -125,6 +125,7 @@
         display: block;
         position: relative;
         margin-right: 5vw;
+        width: 100%;
         &:last-child {
           margin-right: 0;
         }
@@ -133,6 +134,7 @@
           align-items: center;
           color: white;
           text-decoration: none;
+          width: 100%;
           cursor: pointer;
           & svg {
             height: 20px;
@@ -147,8 +149,10 @@
             display: flex;
             flex-wrap: wrap;
             position: absolute;
-            top: 25px;
-            right: 0;
+            top: 30px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 175px;
             background-color: white;
             box-shadow: $shadow-soft;
             border-radius: 0 0 0.5rem 0.5rem;
