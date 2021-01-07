@@ -32,32 +32,18 @@
       }
       & .connect-button {
         display: block;
+        position: relative;
+        z-index: 10;
         width: 165px;
         text-align: center;
         font-size: 12px;
         font-weight: 600;
-        margin: 40px auto 8px auto;
+        margin: 40px auto;
         color: #3934a1;
         border: none;
         border-radius: 0.25rem;
         padding: 10px 8px;
         box-shadow: $shadow-soft-light;
-        cursor: pointer;
-        &:hover {
-          color: #999999;
-        }
-      }
-      & .disconnect-button {
-        display: block;
-        width: 165px;
-        text-align: center;
-        font-size: 12px;
-        font-weight: 600;
-        margin: 0 auto;
-        color: red;
-        border: none;
-        border-radius: 0.25rem;
-        padding: 10px 8px;
         cursor: pointer;
         &:hover {
           color: #999999;

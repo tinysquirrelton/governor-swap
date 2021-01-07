@@ -743,16 +743,6 @@ class Swap extends Component {
     }
   };
 
-  setDisconnection = () => {
-    this.web3 = null;
-    this.setState({ account: null, isConnected: false, isDropdownOpen: false });
-    this.LPContract = null;
-    this.swapContract = null;
-    this.statsInterval != null
-      ? clearInterval(this.statsInterval)
-      : (this.statsInterval = null);
-  };
-
   render() {
     return (
       <div className="max-width-container">
@@ -763,18 +753,14 @@ class Swap extends Component {
                 <div className="title-text">sLP to LP Swap</div>
                 <ConnectButton
                   account={this.state.account}
-                  isDropdownOpen={this.state.isDropdownOpen}
                   setConnection={this.setConnection}
-                  setDisconnection={this.setDisconnection}
                 />
               </>
             ) : (
               <>
                 <ConnectButton
                   account={this.state.account}
-                  isDropdownOpen={this.state.isDropdownOpen}
                   setConnection={this.setConnection}
-                  setDisconnection={this.setDisconnection}
                 />
                 <div className="title-text">sLP to LP Swap</div>
               </>

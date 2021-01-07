@@ -19,11 +19,6 @@ export const ConnectButton = ({
       <button className="connect-button" onClick={setConnection}>
         {title}
       </button>
-      {isDropdownOpen && (
-        <button className="disconnect-button" onClick={setDisconnection}>
-          Disconnect
-        </button>
-      )}
     </div>
   );
 };
