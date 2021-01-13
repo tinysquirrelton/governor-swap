@@ -13,7 +13,7 @@ export const resources = [
   { to: "/", title: "Blog" },
   { to: "https://gdao.network/", title: "Forum" },
   { to: "/", title: "Litepaper" },
-  { to: "https://governor.social/", title: "Archieve" },
+  { to: "https://governor.social/", title: "Archive" },
 ];
 
 export const social = [
