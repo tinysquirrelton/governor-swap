@@ -6,7 +6,7 @@
   position: relative;
   z-index: 10;
   max-width: 1000px;
-  min-height: 100vh;
+  min-height: calc(100vh - 75px);
   margin: 0 auto;
 
   & .swap-title {
@@ -39,7 +39,7 @@
         text-align: center;
         font-size: 12px;
         font-weight: 600;
-        margin: 40px auto;
+        margin: 0 auto 25px auto;
         color: #3934a1;
         border: none;
         border-radius: 0.25rem;
