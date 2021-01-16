@@ -152,12 +152,12 @@ export default class Header extends Component {
     return (
       <div className="header-container">
         <div className="header-content">
-          <Link to="/" className="logo-container">
+          <a href="https://governordao.org" className="logo-container">
             <div className="logo-img">
               <img src={Logo} alt="logo" />
             </div>
             <div className="logo-title">Governor</div>
-          </Link>
+          </a>
           {this.state.isSmall || this.state.isMedium ? <XSNav /> : <LGNav />}
         </div>
       </div>
