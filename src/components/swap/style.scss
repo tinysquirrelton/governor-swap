@@ -6,7 +6,7 @@
   position: relative;
   z-index: 10;
   max-width: 1000px;
-  min-height: calc(100vh - 75px);
+  min-height: calc(100vh - 125px);
   margin: 0 auto;
 
   & .swap-title {
@@ -25,30 +25,23 @@
         margin: 50px 0 25px 0;
       }
     }
-    & .connect-container {
-      @include lg {
-        position: absolute;
-        top: 0;
-        right: 0;
-      }
-      & .connect-button {
-        display: block;
-        position: relative;
-        z-index: 10;
-        width: 165px;
-        text-align: center;
-        font-size: 12px;
-        font-weight: 600;
-        margin: 0 auto 25px auto;
-        color: #3934a1;
-        border: none;
-        border-radius: 0.25rem;
-        padding: 10px 8px;
-        box-shadow: $shadow-soft-light;
-        cursor: pointer;
-        &:hover {
-          color: #999999;
-        }
+    & .connect-button {
+      display: block;
+      position: relative;
+      z-index: 10;
+      width: 165px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      margin: 25px auto;
+      color: #3934a1;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 10px 8px;
+      box-shadow: $shadow-soft-light;
+      cursor: pointer;
+      &:hover {
+        color: #999999;
       }
     }
   }

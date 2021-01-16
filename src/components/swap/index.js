@@ -21,7 +21,6 @@ class Swap extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLarge: null,
       isConnected: false,
       isDropdownOpen: false,
       account: null,
@@ -52,8 +51,6 @@ class Swap extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener("resize", this.onResize.bind(this));
-    this.onResize();
     this.onAccountChange();
     this.onNetworkChange();
 
@@ -88,16 +85,6 @@ class Swap extends Component {
       this.setState({ isSwapLive: true });
     }
   }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.onResize());
-  }
-
-  onResize = () => {
-    this.setState({
-      isLarge: window.innerWidth >= 992,
-    });
-  };
 
   roundTo = (n, digits) => {
     var negative = false;
@@ -309,23 +296,11 @@ class Swap extends Component {
       <div className="max-width-container">
         <div className="swap-container">
           <div className="swap-title">
-            {this.state.isLarge ? (
-              <>
-                <div className="title-text">sLP to LP Swap</div>
-                <ConnectButton
-                  account={this.state.account}
-                  setConnection={this.setConnection}
-                />
-              </>
-            ) : (
-              <>
-                <ConnectButton
-                  account={this.state.account}
-                  setConnection={this.setConnection}
-                />
-                <div className="title-text">sLP to LP Swap</div>
-              </>
-            )}
+            <div className="title-text">sLP to LP Swap</div>
+            <ConnectButton
+              account={this.state.account}
+              setConnection={this.setConnection}
+            />
           </div>
           <div className="swap-subtitle">
             <a

@@ -10,10 +10,8 @@ export const ConnectButton = ({ account, setConnection }) => {
     title = "Connect wallet";
   }
   return (
-    <div className="connect-container">
-      <button className="connect-button" onClick={setConnection}>
-        {title}
-      </button>
-    </div>
+    <button className="connect-button" onClick={setConnection}>
+      {title}
+    </button>
   );
 };
