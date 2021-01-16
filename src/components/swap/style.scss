@@ -6,8 +6,11 @@
   position: relative;
   z-index: 10;
   max-width: 1000px;
-  min-height: calc(100vh - 125px);
+  min-height: calc(100vh - 75px);
   margin: 0 auto;
+  @include lg {
+    min-height: calc(100vh - 125px);
+  }
 
   & .swap-title {
     display: block;
