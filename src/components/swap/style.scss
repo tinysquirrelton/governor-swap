@@ -1,15 +1,15 @@
 @import "../../styles/breakpoints.scss";
 @import "../../styles/shadows.scss";
 
-.airdrop-container {
+.swap-container {
   display: block;
   position: relative;
   z-index: 10;
   max-width: 1000px;
-  min-height: 87.5vh;
+  min-height: 100vh;
   margin: 0 auto;
 
-  & .airdrop-title {
+  & .swap-title {
     display: block;
     position: relative;
     & .title-text {
@@ -52,7 +52,7 @@
       }
     }
   }
-  & .airdrop-subtitle {
+  & .swap-subtitle {
     display: block;
     width: 100%;
     text-align: center;
@@ -67,7 +67,7 @@
     }
   }
 
-  & .airdrop-details {
+  & .swap-details {
     display: block;
     margin: 45px auto;
     text-align: center;
