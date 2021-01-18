@@ -1,8 +1,19 @@
 import React, { Component } from "react";
 import Web3 from "web3";
 import { toast } from "react-toastify";
-import { connect } from "react-redux";
 import { ConnectButton } from "./elements";
+
+// * ABI
+import { LPABI } from "../../data/abi/LPABI";
+import { sLPABI } from "../../data/abi/sLPABI";
+import { swapContractABI } from "../../data/abi/swapContractABI";
+
+// * CONSTANTS
+import {
+  LPAddress,
+  SLPAddress,
+  swapContractAddress,
+} from "../../data/constants";
 
 import "./style.scss";
 
@@ -10,9 +21,6 @@ class Swap extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isSmall: null,
-      isMedium: null,
-      isLarge: null,
       isConnected: false,
       isDropdownOpen: false,
       account: null,
@@ -27,465 +35,55 @@ class Swap extends Component {
       isSwapLive: false,
       countdownString: "0:0:0:0",
     };
-    this.LPABI = [
-      {
-        inputs: [],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "constructor",
-      },
-      {
-        anonymous: false,
-        inputs: [
-          {
-            indexed: true,
-            internalType: "address",
-            name: "owner",
-            type: "address",
-          },
-          {
-            indexed: true,
-            internalType: "address",
-            name: "spender",
-            type: "address",
-          },
-          {
-            indexed: false,
-            internalType: "uint256",
-            name: "value",
-            type: "uint256",
-          },
-        ],
-        name: "Approval",
-        type: "event",
-      },
-      {
-        anonymous: false,
-        inputs: [
-          {
-            indexed: true,
-            internalType: "address",
-            name: "from",
-            type: "address",
-          },
-          {
-            indexed: true,
-            internalType: "address",
-            name: "to",
-            type: "address",
-          },
-          {
-            indexed: false,
-            internalType: "uint256",
-            name: "value",
-            type: "uint256",
-          },
-        ],
-        name: "Transfer",
-        type: "event",
-      },
-      {
-        constant: true,
-        inputs: [
-          { internalType: "address", name: "owner", type: "address" },
-          { internalType: "address", name: "spender", type: "address" },
-        ],
-        name: "allowance",
-        outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-        payable: false,
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        constant: false,
-        inputs: [
-          { internalType: "address", name: "spender", type: "address" },
-          { internalType: "uint256", name: "amount", type: "uint256" },
-        ],
-        name: "approve",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        constant: true,
-        inputs: [{ internalType: "address", name: "account", type: "address" }],
-        name: "balanceOf",
-        outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-        payable: false,
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        constant: false,
-        inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
-        name: "burn",
-        outputs: [],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        constant: false,
-        inputs: [
-          { internalType: "address", name: "account", type: "address" },
-          { internalType: "uint256", name: "amount", type: "uint256" },
-        ],
-        name: "burnFrom",
-        outputs: [],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        constant: true,
-        inputs: [],
-        name: "decimals",
-        outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
-        payable: false,
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        constant: false,
-        inputs: [
-          { internalType: "address", name: "spender", type: "address" },
-          { internalType: "uint256", name: "subtractedValue", type: "uint256" },
-        ],
-        name: "decreaseAllowance",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        constant: false,
-        inputs: [
-          { internalType: "address", name: "spender", type: "address" },
-          { internalType: "uint256", name: "addedValue", type: "uint256" },
-        ],
-        name: "increaseAllowance",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        constant: true,
-        inputs: [],
-        name: "name",
-        outputs: [{ internalType: "string", name: "", type: "string" }],
-        payable: false,
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        constant: true,
-        inputs: [],
-        name: "symbol",
-        outputs: [{ internalType: "string", name: "", type: "string" }],
-        payable: false,
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        constant: true,
-        inputs: [],
-        name: "totalSupply",
-        outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-        payable: false,
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        constant: false,
-        inputs: [
-          { internalType: "address", name: "recipient", type: "address" },
-          { internalType: "uint256", name: "amount", type: "uint256" },
-        ],
-        name: "transfer",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        constant: false,
-        inputs: [
-          { internalType: "address", name: "sender", type: "address" },
-          { internalType: "address", name: "recipient", type: "address" },
-          { internalType: "uint256", name: "amount", type: "uint256" },
-        ],
-        name: "transferFrom",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-    ];
+    // ABI
+    this.LPABI = LPABI;
+    this.SLPABI = sLPABI;
+    this.swapContractABI = swapContractABI;
+    // Address
     this.LPAddress = "0x4d184bf6f805ee839517164d301f0c4e5d25c374";
-    this.LPContract = null;
-    this.SLPABI = [
-      {
-        inputs: [],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "constructor",
-      },
-      {
-        anonymous: false,
-        inputs: [
-          {
-            indexed: true,
-            internalType: "address",
-            name: "owner",
-            type: "address",
-          },
-          {
-            indexed: true,
-            internalType: "address",
-            name: "spender",
-            type: "address",
-          },
-          {
-            indexed: false,
-            internalType: "uint256",
-            name: "value",
-            type: "uint256",
-          },
-        ],
-        name: "Approval",
-        type: "event",
-      },
-      {
-        anonymous: false,
-        inputs: [
-          {
-            indexed: true,
-            internalType: "address",
-            name: "from",
-            type: "address",
-          },
-          {
-            indexed: true,
-            internalType: "address",
-            name: "to",
-            type: "address",
-          },
-          {
-            indexed: false,
-            internalType: "uint256",
-            name: "value",
-            type: "uint256",
-          },
-        ],
-        name: "Transfer",
-        type: "event",
-      },
-      {
-        constant: true,
-        inputs: [
-          { internalType: "address", name: "owner", type: "address" },
-          { internalType: "address", name: "spender", type: "address" },
-        ],
-        name: "allowance",
-        outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-        payable: false,
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        constant: false,
-        inputs: [
-          { internalType: "address", name: "spender", type: "address" },
-          { internalType: "uint256", name: "amount", type: "uint256" },
-        ],
-        name: "approve",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        constant: true,
-        inputs: [{ internalType: "address", name: "account", type: "address" }],
-        name: "balanceOf",
-        outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-        payable: false,
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        constant: false,
-        inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
-        name: "burn",
-        outputs: [],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        constant: false,
-        inputs: [
-          { internalType: "address", name: "account", type: "address" },
-          { internalType: "uint256", name: "amount", type: "uint256" },
-        ],
-        name: "burnFrom",
-        outputs: [],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        constant: true,
-        inputs: [],
-        name: "decimals",
-        outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
-        payable: false,
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        constant: false,
-        inputs: [
-          { internalType: "address", name: "spender", type: "address" },
-          { internalType: "uint256", name: "subtractedValue", type: "uint256" },
-        ],
-        name: "decreaseAllowance",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        constant: false,
-        inputs: [
-          { internalType: "address", name: "spender", type: "address" },
-          { internalType: "uint256", name: "addedValue", type: "uint256" },
-        ],
-        name: "increaseAllowance",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        constant: true,
-        inputs: [],
-        name: "name",
-        outputs: [{ internalType: "string", name: "", type: "string" }],
-        payable: false,
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        constant: true,
-        inputs: [],
-        name: "symbol",
-        outputs: [{ internalType: "string", name: "", type: "string" }],
-        payable: false,
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        constant: true,
-        inputs: [],
-        name: "totalSupply",
-        outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-        payable: false,
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        constant: false,
-        inputs: [
-          { internalType: "address", name: "recipient", type: "address" },
-          { internalType: "uint256", name: "amount", type: "uint256" },
-        ],
-        name: "transfer",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        constant: false,
-        inputs: [
-          { internalType: "address", name: "sender", type: "address" },
-          { internalType: "address", name: "recipient", type: "address" },
-          { internalType: "uint256", name: "amount", type: "uint256" },
-        ],
-        name: "transferFrom",
-        outputs: [{ internalType: "bool", name: "", type: "bool" }],
-        payable: false,
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-    ];
     this.SLPAddress = "0xcced3780fba37761646962b2997d40b94de33954";
-    this.SLPContract = null;
-    this.swapContract = null;
     this.swapContractAddress = "0xcc23ef76b46ed576caa5a1481f4400d2543f8006";
-    this.swapContractABI = [
-      {
-        inputs: [
-          { internalType: "address", name: "_synthetico", type: "address" },
-          { internalType: "address", name: "_authentico", type: "address" },
-          { internalType: "uint256", name: "_inicio", type: "uint256" },
-        ],
-        stateMutability: "nonpayable",
-        type: "constructor",
-      },
-      {
-        anonymous: false,
-        inputs: [
-          {
-            indexed: true,
-            internalType: "address",
-            name: "_purchaser",
-            type: "address",
-          },
-          {
-            indexed: true,
-            internalType: "uint256",
-            name: "_tokens",
-            type: "uint256",
-          },
-        ],
-        name: "purchased",
-        type: "event",
-      },
-      {
-        inputs: [],
-        name: "authentico",
-        outputs: [{ internalType: "address", name: "", type: "address" }],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "inicio",
-        outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-        stateMutability: "view",
-        type: "function",
-      },
-      {
-        inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
-        name: "purchase",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-      {
-        inputs: [],
-        name: "synthetico",
-        outputs: [{ internalType: "address", name: "", type: "address" }],
-        stateMutability: "view",
-        type: "function",
-      },
-    ];
+    // Contract
+    this.LPContract = LPAddress;
+    this.SLPContract = SLPAddress;
+    this.swapContract = swapContractAddress;
     this.swapStartTimestamp = 1608652800;
+  }
+
+  componentDidMount() {
+    this.onAccountChange();
+    this.onNetworkChange();
+
+    let now = new Date().getTime();
+    let startCountdown = this.swapStartTimestamp * 1000;
+    let self = this;
+    if (startCountdown > now) {
+      let countdownInterval = setInterval(function () {
+        let now = new Date().getTime();
+        let distance = startCountdown - now;
+
+        let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        let hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        let calculatedCountdownString =
+          days + ":" + hours + ":" + minutes + ":" + seconds;
+        self.setState({ countdownString: calculatedCountdownString });
+
+        if (distance < 0) {
+          self.setState({ isSwapLive: true });
+          clearInterval(countdownInterval);
+        }
+      }, 1000);
+    } else {
+      this.setState({ isSwapLive: true });
+    }
   }
 
   roundTo = (n, digits) => {
@@ -663,56 +261,6 @@ class Swap extends Component {
     }
   };
 
-  componentDidMount() {
-    window.addEventListener("resize", this.onResize.bind(this));
-    this.onResize();
-    this.onAccountChange();
-    this.onNetworkChange();
-
-    let now = new Date().getTime();
-    let startCountdown = this.swapStartTimestamp * 1000;
-    let self = this;
-    if (startCountdown > now) {
-      let countdownInterval = setInterval(function () {
-        let now = new Date().getTime();
-        let distance = startCountdown - now;
-
-        let days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        let hours = Math.floor(
-          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        );
-        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        hours = hours < 10 ? "0" + hours : hours;
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        let calculatedCountdownString =
-          days + ":" + hours + ":" + minutes + ":" + seconds;
-        self.setState({ countdownString: calculatedCountdownString });
-
-        if (distance < 0) {
-          self.setState({ isSwapLive: true });
-          clearInterval(countdownInterval);
-        }
-      }, 1000);
-    } else {
-      this.setState({ isSwapLive: true });
-    }
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.onResize());
-  }
-
-  onResize = () => {
-    this.setState({
-      isLarge: window.innerWidth >= 992,
-      isMedium: window.innerWidth >= 768 && window.innerWidth < 992,
-      isSmall: window.innerWidth < 768,
-    });
-  };
-
   onAccountChange() {
     window?.ethereum?.on("accountsChanged", (accounts) => {
       if (
@@ -746,27 +294,15 @@ class Swap extends Component {
   render() {
     return (
       <div className="max-width-container">
-        <div className="airdrop-container">
-          <div className="airdrop-title">
-            {this.state.isLarge ? (
-              <>
-                <div className="title-text">sLP to LP Swap</div>
-                <ConnectButton
-                  account={this.state.account}
-                  setConnection={this.setConnection}
-                />
-              </>
-            ) : (
-              <>
-                <ConnectButton
-                  account={this.state.account}
-                  setConnection={this.setConnection}
-                />
-                <div className="title-text">sLP to LP Swap</div>
-              </>
-            )}
+        <div className="swap-container">
+          <div className="swap-title">
+            <div className="title-text">sLP to LP Swap</div>
+            <ConnectButton
+              account={this.state.account}
+              setConnection={this.setConnection}
+            />
           </div>
-          <div className="airdrop-subtitle">
+          <div className="swap-subtitle">
             <a
               href="https://etherscan.io/address/0xcc23ef76b46ed576caa5a1481f4400d2543f8006#code"
               target="_blank"
@@ -782,7 +318,7 @@ class Swap extends Component {
             </a>
           </div>
 
-          <div className="airdrop-details">
+          <div className="swap-details">
             <div className="upper">
               <div className="details-item">
                 <div className="title">Unclaimed LP</div>
@@ -853,8 +389,4 @@ class Swap extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({});
-
-const mapDispatchToProps = {};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Swap);
+export default Swap;

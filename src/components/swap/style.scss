@@ -1,14 +1,18 @@
 @import "../../styles/breakpoints.scss";
 @import "../../styles/shadows.scss";
 
-.airdrop-container {
+.swap-container {
   display: block;
   position: relative;
   z-index: 10;
   max-width: 1000px;
+  min-height: calc(100vh - 75px);
   margin: 0 auto;
+  @include lg {
+    min-height: calc(100vh - 125px);
+  }
 
-  & .airdrop-title {
+  & .swap-title {
     display: block;
     position: relative;
     & .title-text {
@@ -24,34 +28,27 @@
         margin: 50px 0 25px 0;
       }
     }
-    & .connect-container {
-      @include lg {
-        position: absolute;
-        top: 0;
-        right: 0;
-      }
-      & .connect-button {
-        display: block;
-        position: relative;
-        z-index: 10;
-        width: 165px;
-        text-align: center;
-        font-size: 12px;
-        font-weight: 600;
-        margin: 40px auto;
-        color: #3934a1;
-        border: none;
-        border-radius: 0.25rem;
-        padding: 10px 8px;
-        box-shadow: $shadow-soft-light;
-        cursor: pointer;
-        &:hover {
-          color: #999999;
-        }
+    & .connect-button {
+      display: block;
+      position: relative;
+      z-index: 10;
+      width: 165px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      margin: 25px auto;
+      color: #3934a1;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 10px 8px;
+      box-shadow: $shadow-soft-light;
+      cursor: pointer;
+      &:hover {
+        color: #999999;
       }
     }
   }
-  & .airdrop-subtitle {
+  & .swap-subtitle {
     display: block;
     width: 100%;
     text-align: center;
@@ -66,7 +63,7 @@
     }
   }
 
-  & .airdrop-details {
+  & .swap-details {
     display: block;
     margin: 45px auto;
     text-align: center;
