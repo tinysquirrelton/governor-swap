@@ -26,7 +26,7 @@ class Footer extends Component {
               </div>
               <div className="item">
                 <div className="header">Resources</div>
-                <a href="/">Blog</a>
+                <a href="https://governordao.org/media">Media</a>
                 <a href="https://gdao.network/">Forum</a>
                 <a
                   href="/"
