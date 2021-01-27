@@ -1,9 +1,10 @@
 export const solutions = {
-  to: "https://governordao.org/gaas",
+  to: "https://governordao.org/",
   title: "Solutions",
 };
 
 export const applications = [
+  { to: "https://stake.governordao.org/", title: "Stake" },
   { to: "https://mine.governordao.org/", title: "Liquidity Mine" },
   { to: "https://swap.governordao.org/", title: "Swap" },
   { to: "https://airdrop.governordao.org/", title: "Airdrop" },
