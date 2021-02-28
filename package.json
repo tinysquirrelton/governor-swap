@@ -24,7 +24,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postinstall": "cp -r node_modules/governor-common/src src/governor-common"
+    "postinstall": "rm -rf src/governor-common && cp -r node_modules/governor-common/src src/governor-common"
   },
   "eslintConfig": {
     "extends": [
