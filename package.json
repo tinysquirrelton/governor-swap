@@ -8,6 +8,7 @@
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.5.0",
     "axios": "^0.21.1",
+    "governor-common": "github:tinysquirrelton/governor-common",
     "node-sass": "^4.14.1",
     "react-dom": "^17.0.1",
     "react-feather": "^2.0.9",
@@ -22,7 +23,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "postinstall": "cp -r node_modules/governor-common/src src/governor-common"
   },
   "eslintConfig": {
     "extends": [
