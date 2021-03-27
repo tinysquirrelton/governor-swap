@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Web3 from "web3";
 import { toast } from "react-toastify";
 import { ConnectButton } from "./elements";
 
@@ -15,15 +14,15 @@ import {
   swapContractAddress,
 } from "../../data/constants";
 
+// * WALLETCONNECT
+import WalletConnect from "../../governor-common/components/walletconnect/WalletConnect";
+
 import "./style.scss";
 
 class Swap extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isConnected: false,
-      isDropdownOpen: false,
-      account: null,
       day: 0,
       percentage: 0,
       unclaimed: 0,
@@ -35,24 +34,26 @@ class Swap extends Component {
       isSwapLive: false,
       countdownString: "0:0:0:0",
     };
+    this.walletconnect = null;
+    this.web3 = null;
     // ABI
     this.LPABI = LPABI;
     this.SLPABI = sLPABI;
     this.swapContractABI = swapContractABI;
-    // Address
-    this.LPAddress = "0x4d184bf6f805ee839517164d301f0c4e5d25c374";
-    this.SLPAddress = "0xcced3780fba37761646962b2997d40b94de33954";
-    this.swapContractAddress = "0xcc23ef76b46ed576caa5a1481f4400d2543f8006";
     // Contract
-    this.LPContract = LPAddress;
-    this.SLPContract = SLPAddress;
-    this.swapContract = swapContractAddress;
+    this.LPContract = null;
+    this.SLPContract = null;
+    this.swapContract = null;
     this.swapStartTimestamp = 1608652800;
   }
 
-  componentDidMount() {
-    this.onAccountChange();
-    this.onNetworkChange();
+  async componentDidMount() {
+    this.walletconnect = await new WalletConnect(
+      this.onConnect,
+      this.onResetConnect
+    );
+    await this.walletconnect.connectWeb3();
+    this.web3 = await this.walletconnect.getWeb3();
 
     let now = new Date().getTime();
     let startCountdown = this.swapStartTimestamp * 1000;
@@ -84,6 +85,10 @@ class Swap extends Component {
     } else {
       this.setState({ isSwapLive: true });
     }
+    this.getSwapStats();
+    this.statsInterval = setInterval(function () {
+      self.getSwapStats();
+    }, 10000);
   }
 
   roundTo = (n, digits) => {
@@ -104,69 +109,31 @@ class Swap extends Component {
     return n;
   };
 
-  getWeb3 = async () => {
-    // Modern dapp browsers...
-    if (window.ethereum) {
-      this.web3 = new Web3(window.ethereum);
-      try {
-        await window.ethereum.enable().then((accounts) => {
-          this.connectMainnet(accounts);
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    // Legacy dapp browsers...
-    else if (window.web3) {
-      this.web3 = new Web3(Web3.currentProvider);
-      try {
-        await this.web3.eth.getAccounts().then((accounts) => {
-          this.connectMainnet(accounts);
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      toast.error(
-        "Non-Ethereum browser detected. You should consider trying MetaMask!"
-      );
-    }
+  onConnect = (web3) => {
+    this.SLPContract = new web3.eth.Contract(this.SLPABI, SLPAddress);
+    this.LPContract = new web3.eth.Contract(this.LPABI, LPAddress);
+    this.swapContract = new web3.eth.Contract(
+      this.swapContractABI,
+      swapContractAddress
+    );
+    // force a state update to get new values
+    this.setState({});
   };
 
-  connectMainnet = async (accounts) => {
-    await this.web3?.eth?.getChainId().then((x) => {
-      if (x === 1) {
-        this.setState({ account: accounts[0].toString(), isConnected: true });
-
-        this.SLPContract = new this.web3.eth.Contract(
-          this.SLPABI,
-          this.SLPAddress
-        );
-        this.LPContract = new this.web3.eth.Contract(
-          this.LPABI,
-          this.LPAddress
-        );
-        this.swapContract = new this.web3.eth.Contract(
-          this.swapContractABI,
-          this.swapContractAddress
-        );
-
-        this.getSwapStats();
-        var self = this;
-        this.statsInterval = setInterval(function () {
-          self.getSwapStats();
-        }, 10000);
-      } else {
-        this.setState({ account: null });
-        toast.error("You need to be on the Ethereum Mainnet");
-      }
-    });
+  onResetConnect = () => {
+    this.setState({});
   };
 
   getSwapStats = () => {
-    if (this.SLPContract != null && this.LPContract != null) {
+    if (
+      this.web3 != null &&
+      this.walletconnect?.account != null &&
+      this.web3?.utils.isAddress(this.walletconnect?.account) &&
+      this.SLPContract != null &&
+      this.LPContract != null
+    ) {
       this.SLPContract.methods
-        .balanceOf(this.state.account)
+        .balanceOf(this.walletconnect?.account)
         .call()
         .then((result) => {
           this.setState({
@@ -175,7 +142,7 @@ class Swap extends Component {
           });
         });
       this.LPContract.methods
-        .balanceOf(this.swapContractAddress)
+        .balanceOf(swapContractAddress)
         .call()
         .then((result) => {
           this.setState({
@@ -183,7 +150,7 @@ class Swap extends Component {
           });
         });
       this.SLPContract.methods
-        .balanceOf(this.swapContractAddress)
+        .balanceOf(swapContractAddress)
         .call()
         .then((result) => {
           this.setState({
@@ -191,7 +158,7 @@ class Swap extends Component {
           });
         });
       this.SLPContract.methods
-        .allowance(this.state.account, this.swapContractAddress)
+        .allowance(this.walletconnect?.account, swapContractAddress)
         .call()
         .then((result) => {
           this.setState({ SLPAllowance: result });
@@ -202,9 +169,9 @@ class Swap extends Component {
   approveContract = () => {
     if (this.web3 != null && this.SLPContract != null) {
       this.SLPContract.methods
-        .approve(this.swapContractAddress, this.state.userSLPRaw)
+        .approve(swapContractAddress, this.state.userSLPRaw)
         .send({
-          from: this.state.account,
+          from: this.walletconnect?.account,
         })
         .on("error", function (error) {
           toast.error("Transaction was not successful");
@@ -236,7 +203,7 @@ class Swap extends Component {
       this.swapContract.methods
         .purchase(this.state.userSLPRaw)
         .send({
-          from: this.state.account,
+          from: this.walletconnect?.account,
         })
         .on("error", function (error) {
           toast.error("Transaction was not successful");
@@ -261,36 +228,6 @@ class Swap extends Component {
     }
   };
 
-  onAccountChange() {
-    window?.ethereum?.on("accountsChanged", (accounts) => {
-      if (
-        accounts.length > 0 &&
-        this.state.account !== accounts[0].toString()
-      ) {
-        this.setState({ account: accounts[0].toString() });
-      } else {
-        this.setState({ account: null });
-      }
-    });
-  }
-
-  onNetworkChange() {
-    window?.ethereum?.on("chainChanged", (chainId) => window.location.reload());
-  }
-
-  setConnection = () => {
-    if (
-      this.state.isConnected &&
-      this.web3.utils.isAddress(this.state.account)
-    ) {
-      this.setState((prevState) => ({
-        isDropdownOpen: !prevState.isDropdownOpen,
-      }));
-    } else {
-      this.getWeb3();
-    }
-  };
-
   render() {
     return (
       <div className="max-width-container">
@@ -298,8 +235,8 @@ class Swap extends Component {
           <div className="swap-title">
             <div className="title-text">sLP to LP Swap</div>
             <ConnectButton
-              account={this.state.account}
-              setConnection={this.setConnection}
+              account={this.walletconnect?.account}
+              setConnection={this.walletconnect?.connectWeb3Manual}
             />
           </div>
           <div className="swap-subtitle">
@@ -341,7 +278,7 @@ class Swap extends Component {
             </div>
             <div className="lower">
               {this.state.isSwapLive ? (
-                this.state.isConnected ? (
+                this.walletconnect?.isConnected ? (
                   <>
                     <div className="claim-item">
                       <div className="title">
