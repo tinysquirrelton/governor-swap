@@ -10,7 +10,7 @@ import Header from "../governor-common/components/header/Header";
 import Footer from "../governor-common/components/footer/Footer";
 
 // LAZY IMPORT
-const Swap = lazy(() => import("../components/swap"));
+// const Swap = lazy(() => import("../components/swap"));
 
 export default class Routes extends Component {
   render() {
@@ -20,7 +20,7 @@ export default class Routes extends Component {
           <OnPageChange>
             <Header />
             <Switch>
-              <Route exact path={"/"} component={Swap} />
+              {/* <Route exact path={"/"} component={Swap} /> */}
               <Route
                 component={() => {
                   window.location.href = "https://governordao.org";
